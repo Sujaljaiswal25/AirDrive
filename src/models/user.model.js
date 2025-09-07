@@ -22,6 +22,17 @@ const userSchema = new mongoose.Schema({
     required: [true, "Password is required"],
   },
 
+  avatar: {
+    type: String, // profile picture URL
+    default: "",
+  },
+
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
+
 }, { timestamps: true });
 
 
