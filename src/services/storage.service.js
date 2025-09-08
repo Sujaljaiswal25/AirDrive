@@ -10,19 +10,45 @@ const imagekit = new ImageKit({
  * Upload file to ImageKit
  * @param {Buffer} fileBuffer - multer buffer
  * @param {string} fileName - file name
- * @returns uploaded file URL and metadata
+ * @returns {Object} - uploaded file details (url, fileId, etc.)
  */
-const uploadFile = async (fileBuffer, fileName) => {
+const uploadFileToImageKit = async (fileBuffer, fileName) => {
   try {
     const result = await imagekit.upload({
-      file: fileBuffer.toString("base64"),
-      fileName: fileName,
-      
+      file: fileBuffer.toString("base64"), // ✅ buffer ko base64 me convert
+      fileName,
     });
-    return result; // contains url, fileId etc
+
+    // Explicitly return only required fields
+    return {
+      url: result.url,
+      fileId: result.fileId,   // 🔑 ye zaroor save hoga ab
+      name: result.name,
+      size: result.size,
+      type: result.fileType,
+    };
   } catch (err) {
-    throw new Error(err.message);
+    console.error("❌ ImageKit Upload Error:", err.message);
+    throw new Error("Image upload failed: " + err.message);
   }
 };
 
-module.exports = { uploadFile };
+/**
+ * Delete file from ImageKit
+ * @param {string} fileId 
+ */
+const deleteFileFromImageKit = async (fileId) => {
+  try {
+    if (!fileId) {
+      throw new Error("Missing fileId for delete request");
+    }
+
+    await imagekit.deleteFile(fileId);
+    return true;
+  } catch (err) {
+    console.error("❌ ImageKit Delete Error:", err.message);
+    throw new Error("Image delete failed: " + err.message);
+  }
+};
+
+module.exports = { uploadFileToImageKit, deleteFileFromImageKit };

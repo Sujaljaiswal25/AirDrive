@@ -1,7 +1,6 @@
-// middleware/upload.middleware.js
 const multer = require("multer");
 
-const storage = multer.memoryStorage(); // memory me file rakhega (ImageKit ke liye)
+const storage = multer.memoryStorage(); // file buffer me rahega
 const upload = multer({ storage });
 
 module.exports = upload;

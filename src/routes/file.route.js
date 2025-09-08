@@ -1,10 +1,11 @@
-// routes/file.route.js
 const express = require("express");
 const router = express.Router();
+const { uploadFile, getUserFiles, deleteFile } = require("../controllers/file.controller");
+const { protect } = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
-const { uploadController } = require("../controllers/file.controller");
 
-// Auth middleware can be added here to protect route
-router.post("/upload", upload.single("file"), uploadController);
+router.post("/upload", protect, upload.single("file"), uploadFile);
+router.get("/", protect, getUserFiles);
+router.delete("/:id", protect, deleteFile);
 
 module.exports = router;

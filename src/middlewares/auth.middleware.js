@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const userModel = require("../models/user.model");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -53,8 +54,44 @@ const checkRole = (roles) => {
 };
 
 
+
+// Protect middleware
+const protect = async (req, res, next) => {
+  let token;
+
+  // Token mostly "Bearer <token>" format me aata hai
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: "Not authorized, no token" });
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // DB se fresh user data nikalna
+    const user = await userModel.findById(decoded.id).select("-password"); // password exclude
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    req.user = user; // req.user me complete user save
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Not authorized, token failed" });
+  }
+};
+
+
+
+
 module.exports = {
     checkRole,
     verifyRefreshToken,
-    verifyToken
+    verifyToken,
+    protect
 }

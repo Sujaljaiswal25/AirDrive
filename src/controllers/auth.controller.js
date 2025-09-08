@@ -11,7 +11,7 @@ const generateTokens = (user) => {
     role: user.role || "user"
   };
 
-  const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
   const refreshToken = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
   return { accessToken, refreshToken };
@@ -111,7 +111,7 @@ const refreshToken = async (req, res) => {
       if (!user) return res.status(404).json({ message: "User not found" });
 
       const payload = { id: user._id, email: user.email, role: user.role || "user" };
-      const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "15m",
       });
 
