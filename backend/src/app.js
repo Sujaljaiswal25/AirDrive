@@ -2,24 +2,31 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const authRoute = require("./routes/auth.route")
+
+// Import routes
+const authRoute = require("./routes/auth.route");
 const fileRoutes = require("./routes/file.route");
+const profileRoutes = require("./routes/profile.route");
+const errorHandler = require("./middlewares/error.middleware");
 
 const app = express();
 
-app.use(cors());
+// Global Middleware
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
-
-app.get("/", (req, res)=>{
-    res.send("Hello World")
-})
-
-
-app.use("/api/auth", authRoute )
-
-
+// Routes
+app.use("/api/auth", authRoute);
 app.use("/api/files", fileRoutes);
+app.use("/api/profile", profileRoutes);
 
-module.exports = app
+// Error Handler
+app.use(errorHandler);
+
+module.exports = app;

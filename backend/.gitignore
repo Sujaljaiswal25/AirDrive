@@ -1,2 +1,13 @@
 .env
 node_modules
+API_DOCS.md
+ENDPOINTS.md
+FRONTEND_FEATURES.md
+
+# Postman Collections
+*.postman_collection.json
+*.postman_environment.json
+Drive-API.postman_collection.json
+Drive-Environment.postman_environment.json
+postman/
+*.postman.*

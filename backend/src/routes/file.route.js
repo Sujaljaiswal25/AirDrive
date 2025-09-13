@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { 
-  uploadFile, 
-  getUserFiles, 
-  deleteFile, 
-  previewFile, 
-  downloadFile, 
-  createFolder, 
-  shareFile, 
-  searchFiles 
+const {
+  uploadFile,
+  getUserFiles,
+  deleteFile,
+  previewFile,
+  downloadFile,
+  createFolder,
+  shareFile,
+  searchFiles,
 } = require("../controllers/file.controller");
 const { protect } = require("../middlewares/auth.middleware");
 const upload = require("../middlewares/upload.middleware");
@@ -29,7 +29,7 @@ router.get("/download/:id", protect, downloadFile);
 router.delete("/:id", protect, deleteFile);
 
 // 📌 Create folder
-router.post("/folder", protect, createFolder);
+router.post("/folder", protect, express.json(), createFolder);
 
 // 📌 Share file (generate public link)
 router.post("/share/:id", protect, shareFile);
